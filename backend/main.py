@@ -179,17 +179,26 @@ def get_leaderboard(current_user: User = Depends(get_current_user), session: Ses
 # --- Endpoints: Habits ---
 
 @app.get("/habits", response_model=List[Habit])
-def get_habits(session: Session = Depends(get_session), current_user: User = Depends(get_current_user)):
-    return session.exec(select(Habit).where(Habit.user_id == current_user.id)).all()
+def get_habits(session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    return session.exec(select(Habit).where(Habit.user_id == user.id)).all()
 
 @app.post("/habits", response_model=Habit)
-def create_habit(habit: HabitCreate, session: Session = Depends(get_session), current_user: User = Depends(get_current_user)):
+def create_habit(habit: HabitCreate, session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    
     db_habit = Habit(
         name=habit.name,
         icon=habit.icon,
         target_days=habit.target_days,
         scheduled_time=habit.scheduled_time,
-        user_id=current_user.id
+        user_id=user.id
     )
     session.add(db_habit)
     session.commit()
@@ -197,9 +206,14 @@ def create_habit(habit: HabitCreate, session: Session = Depends(get_session), cu
     return db_habit
 
 @app.patch("/habits/{habit_id}", response_model=Habit)
-def update_habit(habit_id: int, habit_update: HabitUpdate, session: Session = Depends(get_session), current_user: User = Depends(get_current_user)):
+def update_habit(habit_id: int, habit_update: HabitUpdate, session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    
     habit = session.get(Habit, habit_id)
-    if not habit or habit.user_id != current_user.id:
+    if not habit or habit.user_id != user.id:
         raise HTTPException(status_code=404, detail="Habit not found")
     
     if habit_update.name is not None: habit.name = habit_update.name
@@ -212,9 +226,14 @@ def update_habit(habit_id: int, habit_update: HabitUpdate, session: Session = De
     return habit
 
 @app.post("/toggle")
-def toggle_habit(request: ToggleRequest, session: Session = Depends(get_session), current_user: User = Depends(get_current_user)):
+def toggle_habit(request: ToggleRequest, session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    
     habit = session.get(Habit, request.habit_id)
-    if not habit or habit.user_id != current_user.id:
+    if not habit or habit.user_id != user.id:
         raise HTTPException(status_code=404, detail="Habit not found")
 
     statement = select(DailyLog).where(
@@ -256,7 +275,12 @@ def toggle_habit(request: ToggleRequest, session: Session = Depends(get_session)
         return {"status": "added", "new_streak": habit.current_streak}
 
 @app.get("/dashboard/{year}/{month}")
-def get_dashboard_data(year: int, month: int, session: Session = Depends(get_session), current_user: User = Depends(get_current_user)):
+def get_dashboard_data(year: int, month: int, session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    current_user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not current_user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    
     try:
         _, last_day = calendar.monthrange(year, month)
         start_date = date(year, month, 1)
