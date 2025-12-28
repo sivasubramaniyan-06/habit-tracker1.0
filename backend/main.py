@@ -35,10 +35,10 @@ app = FastAPI(lifespan=lifespan)
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-# CORS Configuration - Update with your Vercel URL
-# For production, set FRONTEND_URL environment variable in Render
+# CORS Configuration - Production-ready
 FRONTEND_URL = os.getenv("FRONTEND_URL", "")
 
+# Explicitly allowed origins (no wildcards with credentials)
 ALLOWED_ORIGINS = [
     "http://localhost:5173",           # Local Vite dev server
     "http://localhost:3000",           # Alternative local port
@@ -48,17 +48,18 @@ ALLOWED_ORIGINS = [
 # Add production frontend URL if set
 if FRONTEND_URL:
     ALLOWED_ORIGINS.append(FRONTEND_URL)
-    # Also allow preview deployments (Vercel pattern)
-    if "vercel.app" in FRONTEND_URL:
-        base_url = FRONTEND_URL.split("//")[1].split(".")[0]
-        ALLOWED_ORIGINS.append(f"https://{base_url}-*.vercel.app")
+    print(f"✅ CORS: Allowing production origin: {FRONTEND_URL}")
+
+# IMPORTANT: Wildcard patterns like "https://*-vercel.app" DON'T work with credentials
+# This was causing silent POST failures in production!
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # --- Health Check Endpoint ---
