@@ -110,13 +110,22 @@ class ToggleRequest(BaseModel):
 # --- Endpoints: User Info ---
 
 @app.get("/users/me", response_model=UserPublic)
-def read_users_me(current_user: User = Depends(get_current_user)):
+def read_users_me(session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    current_user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not current_user:
+        raise HTTPException(status_code=500, detail="Default user not found")
     return current_user
 
 # --- Endpoints: Social ---
 
 @app.post("/friends/add/{friend_code}")
-def add_friend(friend_code: str, current_user: User = Depends(get_current_user), session: Session = Depends(get_session)):
+def add_friend(friend_code: str, session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    current_user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not current_user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    
     friend = session.exec(select(User).where(User.friend_code == friend_code)).first()
     if not friend:
         raise HTTPException(status_code=404, detail="Friend code not found")
@@ -133,7 +142,12 @@ def add_friend(friend_code: str, current_user: User = Depends(get_current_user),
     return {"status": "added", "friend_name": friend.full_name}
 
 @app.get("/leaderboard")
-def get_leaderboard(current_user: User = Depends(get_current_user), session: Session = Depends(get_session)):
+def get_leaderboard(session: Session = Depends(get_session)):
+    # Use default user (no auth required)
+    current_user = session.exec(select(User).where(User.username == "default_user")).first()
+    if not current_user:
+        raise HTTPException(status_code=500, detail="Default user not found")
+    
     # Get friends IDs
     friendships = session.exec(select(Friendship).where(Friendship.user_id == current_user.id)).all()
     friend_ids = [f.friend_id for f in friendships]
