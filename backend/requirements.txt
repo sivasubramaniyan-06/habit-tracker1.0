@@ -1,4 +1,14 @@
+# FastAPI Framework
 fastapi==0.115.6
+
+# ASGI Server (with standard extras for production)
 uvicorn[standard]==0.34.0
+
+# Database ORM
 sqlmodel==0.0.22
+
+# Data Validation
 pydantic==2.10.6
+
+# Production-ready additions
+gunicorn==21.2.0

@@ -33,16 +33,25 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 # CORS Configuration - Update with your Vercel URL
+# For production, set FRONTEND_URL environment variable in Render
+FRONTEND_URL = os.getenv("FRONTEND_URL", "")
+
 ALLOWED_ORIGINS = [
     "http://localhost:5173",           # Local Vite dev server
     "http://localhost:3000",           # Alternative local port
     "http://127.0.0.1:5173",          # Alternative localhost
-    # Add your Vercel deployment URL here:
-    # "https://your-app.vercel.app",
-    # "https://your-app-*.vercel.app",  # Preview deployments
 ]
+
+# Add production frontend URL if set
+if FRONTEND_URL:
+    ALLOWED_ORIGINS.append(FRONTEND_URL)
+    # Also allow preview deployments (Vercel pattern)
+    if "vercel.app" in FRONTEND_URL:
+        base_url = FRONTEND_URL.split("//")[1].split(".")[0]
+        ALLOWED_ORIGINS.append(f"https://{base_url}-*.vercel.app")
 
 app.add_middleware(
     CORSMiddleware,
@@ -51,6 +60,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --- Health Check Endpoint ---
+@app.get("/")
+def health_check():
+    """Health check endpoint for monitoring"""
+    return {
+        "status": "healthy",
+        "message": "Habit Tracker API is running",
+        "version": "1.0.0"
+    }
+
+@app.get("/health")
+def health():
+    """Alternative health check endpoint"""
+    return {"status": "ok"}
 
 # --- Get Default User ---
 def get_current_user(session: Session = Depends(get_session)):
