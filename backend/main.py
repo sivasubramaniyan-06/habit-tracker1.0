@@ -43,21 +43,22 @@ ALLOWED_ORIGINS = [
     "http://localhost:5173",           # Local Vite dev server
     "http://localhost:3000",           # Alternative local port
     "http://127.0.0.1:5173",          # Alternative localhost
+    # Production Vercel URL
+    "https://habit-tracker1-0-1rd0mb1po-sivasubramaniyan-06s-projects.vercel.app",
 ]
 
-# Add production frontend URL if set
-if FRONTEND_URL:
+# Add additional frontend URL from environment variable if set
+if FRONTEND_URL and FRONTEND_URL not in ALLOWED_ORIGINS:
     ALLOWED_ORIGINS.append(FRONTEND_URL)
-    print(f"✅ CORS: Allowing production origin: {FRONTEND_URL}")
+    print(f"✅ CORS: Allowing additional origin from env: {FRONTEND_URL}")
 
-# IMPORTANT: Wildcard patterns like "https://*-vercel.app" DON'T work with credentials
-# This was causing silent POST failures in production!
+print(f"✅ CORS: Allowed origins: {ALLOWED_ORIGINS}")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],
 )
