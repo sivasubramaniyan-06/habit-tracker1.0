@@ -33,9 +33,20 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 from fastapi.middleware.cors import CORSMiddleware
+
+# CORS Configuration - Update with your Vercel URL
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",           # Local Vite dev server
+    "http://localhost:3000",           # Alternative local port
+    "http://127.0.0.1:5173",          # Alternative localhost
+    # Add your Vercel deployment URL here:
+    # "https://your-app.vercel.app",
+    # "https://your-app-*.vercel.app",  # Preview deployments
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -297,15 +297,42 @@ export default function Dashboard() {
     const [data, setData] = useState(null);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const fetchData = async (dateObj) => {
         try {
+            setLoading(true);
+            setError(null);
             const year = dateObj.getFullYear();
             const month = dateObj.getMonth() + 1;
             const res = await getDashboardData(year, month);
             setData(res.data);
         } catch (err) {
-            console.error(err);
+            console.error('Failed to fetch dashboard data:', err);
+            setError(err.message || 'Failed to connect to backend');
+            // Set empty data structure so UI doesn't break
+            setData({
+                user_info: {
+                    name: 'Habit Tracker User',
+                    friend_code: 'OFFLINE',
+                    pic: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HabitMaster'
+                },
+                habits: [],
+                logs: [],
+                stats: {
+                    daily_aggregates: [],
+                    overall_progress: { completed: 0, total: 0 },
+                    total_habits: 0
+                },
+                meta: {
+                    year: dateObj.getFullYear(),
+                    month: dateObj.getMonth() + 1,
+                    days_in_month: new Date(dateObj.getFullYear(), dateObj.getMonth() + 1, 0).getDate()
+                }
+            });
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -329,7 +356,37 @@ export default function Dashboard() {
         try { await updateHabit(id, updates); fetchData(currentDate); } catch (e) { console.error(e) }
     }
 
-    if (!data) return <div className="min-h-screen flex items-center justify-center text-slate-500 font-semibold animate-pulse">Loading Your Life...</div>
+    if (loading && !data) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-slate-500 font-semibold animate-pulse mb-4">Loading Your Life...</div>
+                    <div className="text-xs text-slate-400">Connecting to backend...</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error && !data) {
+        return (
+            <div className="min-h-screen flex items-center justify-center px-4">
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md text-center">
+                    <div className="text-6xl mb-4">⚠️</div>
+                    <h2 className="text-xl font-bold text-red-800 mb-2">Backend Connection Failed</h2>
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <button
+                        onClick={() => fetchData(currentDate)}
+                        className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+                    >
+                        Retry Connection
+                    </button>
+                    <p className="text-xs text-red-500 mt-4">
+                        Make sure your backend is running and VITE_API_URL is configured correctly.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="pb-20 px-4 pt-8 max-w-[1700px] mx-auto">
