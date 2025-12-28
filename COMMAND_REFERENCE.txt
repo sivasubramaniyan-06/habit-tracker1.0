@@ -1,0 +1,73 @@
+# ============================================
+# QUICK REFERENCE - WHERE TO RUN COMMANDS
+# ============================================
+
+❌ WRONG - Running npm in root:
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> npm run dev
+Error: Cannot find package.json
+
+✅ CORRECT - Running npm in frontend:
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> cd frontend
+C:\Users\sivas\OneDrive\Desktop\habit-tracker\frontend> npm run dev
+Success! Server running on http://localhost:5173
+
+# ============================================
+
+❌ WRONG - Running Python in root:
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> python main.py
+Error: No module named 'main'
+
+✅ CORRECT - Running Python in backend:
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> cd backend
+C:\Users\sivas\OneDrive\Desktop\habit-tracker\backend> python -m uvicorn main:app --reload
+Success! Server running on http://localhost:8000
+
+# ============================================
+
+✅ CORRECT - Running Git in root:
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> git status
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> git add .
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> git commit -m "message"
+C:\Users\sivas\OneDrive\Desktop\habit-tracker> git push
+
+# ============================================
+# COMMAND CHEAT SHEET
+# ============================================
+
+BACKEND COMMANDS (run in backend/ folder):
+  cd backend
+  .venv\Scripts\activate                    # Activate virtual env
+  pip install -r requirements.txt           # Install dependencies
+  python -m uvicorn main:app --reload       # Start server
+
+FRONTEND COMMANDS (run in frontend/ folder):
+  cd frontend
+  npm install                               # Install dependencies
+  npm run dev                               # Start dev server
+  npm run build                             # Build for production
+
+GIT COMMANDS (run in root/ folder):
+  cd C:\Users\sivas\OneDrive\Desktop\habit-tracker
+  git status                                # Check status
+  git add .                                 # Stage changes
+  git commit -m "message"                   # Commit changes
+  git push                                  # Push to GitHub
+
+# ============================================
+# FOLDER STRUCTURE REMINDER
+# ============================================
+
+habit-tracker/              ← Run git commands here
+├── backend/                ← Run python commands here
+│   ├── main.py
+│   └── requirements.txt
+└── frontend/               ← Run npm commands here
+    ├── package.json
+    └── src/
+
+# ============================================
+# REMEMBER:
+# - npm commands → frontend/ folder
+# - python commands → backend/ folder  
+# - git commands → root/ folder
+# ============================================

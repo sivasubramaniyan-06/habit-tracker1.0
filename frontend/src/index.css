@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --main-grid: 250px repeat(31, minmax(35px, 1fr)) 300px;
+}
+
+body {
+  background: linear-gradient(135deg, #E0F2FE 0%, #FFFFFF 100%);
+  min-height: 100vh;
+  color: #1E293B;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Neumorphism Checkbox */
+.neumorphic-checkbox {
+  background: #F0F4F8;
+  box-shadow: 5px 5px 10px #d9dce0, -5px -5px 10px #ffffff;
+  transition: all 0.2s ease;
+}
+
+.neumorphic-checkbox.checked {
+  box-shadow: inset 3px 3px 6px #d9dce0, inset -3px -3px 6px #ffffff;
+  background: linear-gradient(145deg, #60A5FA, #3B82F6);
+}
+
+/* Custom Scrollbar for dense grid */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.8);
+}

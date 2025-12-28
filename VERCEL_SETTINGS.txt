@@ -1,0 +1,52 @@
+# ============================================
+# VERCEL DEPLOYMENT - EXACT SETTINGS
+# ============================================
+# Use these EXACT settings when deploying to Vercel
+# ============================================
+
+PROJECT SETTINGS:
+┌─────────────────────────────────────────────┐
+│ Project Name:      habit-tracker            │
+│ Framework Preset:  Vite                     │
+│ Root Directory:    frontend        ⚠️ KEY!  │
+│ Build Command:     npm run build            │
+│ Output Directory:  dist                     │
+│ Install Command:   npm install              │
+└─────────────────────────────────────────────┘
+
+ENVIRONMENT VARIABLES (Optional):
+┌─────────────────────────────────────────────┐
+│ Name:  VITE_API_URL                         │
+│ Value: http://localhost:8000                │
+│        (or your deployed backend URL)       │
+└─────────────────────────────────────────────┘
+
+DEPLOYMENT STEPS:
+1. Go to https://vercel.com
+2. Sign in with GitHub
+3. Click "Add New..." → "Project"
+4. Import your "habit-tracker" repository
+5. Configure settings (see above)
+6. Click "Deploy"
+7. Wait 1-2 minutes
+8. Get your URL: https://habit-tracker-xyz.vercel.app
+
+IMPORTANT NOTES:
+- ⚠️ Root Directory MUST be "frontend"
+- ⚠️ Without this, deployment will FAIL
+- ✅ Every git push auto-deploys
+- ✅ No need to manually redeploy
+
+TROUBLESHOOTING:
+If build fails:
+1. Check Root Directory = "frontend"
+2. Check Build Command = "npm run build"
+3. Check Output Directory = "dist"
+4. Check deployment logs for errors
+5. Verify package.json exists in frontend/
+
+AFTER DEPLOYMENT:
+- Test your live URL
+- Check browser console for errors
+- Update API URL if backend is deployed
+- Share your app! 🎉

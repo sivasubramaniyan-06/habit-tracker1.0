@@ -1,0 +1,69 @@
+# ============================================
+# HABIT TRACKER - GITHUB PUSH COMMANDS
+# ============================================
+# Run these commands ONE BY ONE in PowerShell
+# Make sure you're in the root directory first!
+# ============================================
+
+# Step 1: Navigate to project root
+cd C:\Users\sivas\OneDrive\Desktop\habit-tracker
+
+# Step 2: Check current git status
+git status
+
+# Step 3: Add all files (respecting .gitignore)
+git add .
+
+# Step 4: Check what will be committed
+git status
+
+# Step 5: Create your first commit
+git commit -m "Initial commit: Habit Tracker with FastAPI backend and React frontend"
+
+# Step 6: Rename branch to main (if needed)
+git branch -M main
+
+# ============================================
+# STOP HERE! Go to GitHub.com and:
+# 1. Click the "+" icon (top right)
+# 2. Select "New repository"
+# 3. Name: habit-tracker
+# 4. Description: A beautiful habit tracking app
+# 5. DO NOT check "Initialize with README"
+# 6. DO NOT add .gitignore
+# 7. Click "Create repository"
+# 8. Copy the repository URL
+# ============================================
+
+# Step 7: Add GitHub remote (REPLACE YOUR_USERNAME!)
+git remote add origin https://github.com/YOUR_USERNAME/habit-tracker.git
+
+# Step 8: Verify remote was added
+git remote -v
+
+# Step 9: Push to GitHub
+git push -u origin main
+
+# ============================================
+# SUCCESS! Your code is now on GitHub! 🎉
+# ============================================
+
+# ============================================
+# FUTURE UPDATES - Use these commands:
+# ============================================
+
+# 1. Check what changed
+git status
+
+# 2. Add changes
+git add .
+
+# 3. Commit with message
+git commit -m "Update: describe your changes here"
+
+# 4. Push to GitHub
+git push
+
+# ============================================
+# That's it! Vercel will auto-deploy! 🚀
+# ============================================
